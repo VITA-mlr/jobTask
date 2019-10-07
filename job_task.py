@@ -1,19 +1,8 @@
 """Game 'Words'"""
 
 
-'''def create_file():
-    """Create file 'input.txt' with list of cities."""
-
-    
-
-    with open('input.txt', 'w') as file:
-        for city in cities:
-            file.write(city)
-            file.write('\n')'''
-
-
 def read_text(filename):
-    """Read text with file 'input.txt'."""
+    """Text read with file 'input.txt'."""
 
     with open(filename) as file:
         text = file.read().splitlines()
@@ -22,7 +11,7 @@ def read_text(filename):
 
 
 def write_data_to_file(filename, list_):
-    """Write combine cities to file 'output.txt'."""
+    """Combine cities write to file 'output.txt'."""
 
     try:
         with open(filename, 'x') as file:
@@ -37,9 +26,13 @@ def write_data_to_file(filename, list_):
 
 
 def combine(cities_list):
-    """To combine list of cities."""
+    """List of cities combine."""
 
     def find_world_for_dict(letter):
+        """Dictionary create.
+        Key - letter,
+        value - list of cities with first letter same key
+        """
         result_by_letter = []
         for city in cities_list:
             # print('letter = {}, city = {}'.format(letter, city))
@@ -82,8 +75,7 @@ def combine(cities_list):
 
 
 def main():
-    cities = ["London", "Baiyin", "Aba", "Almetyevsk", "Amol", "Miandoab", "Omsk", "Nacala", "Kalar", "Balashikha",
-              "Burgaz", "Zhytomyr", "Radom", "Ladyzin", "Paris", "Stockholm"]
+    cities = ["London", "Milan", "Stockholm", "Paris"]
 
     write_data_to_file('input.txt', cities)    # File 'input.txt' create
 
