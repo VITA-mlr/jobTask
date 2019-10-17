@@ -2,88 +2,77 @@
 
 
 def read_text(filename):
-    """Text read with file 'input.txt'."""
+    """Read text from file."""
 
     with open(filename) as file:
-        text = file.read().splitlines()
-        #text = [line.rstrip() for line in file]
+        text = [line.rstrip() for line in file]
     return text
 
 
 def write_data_to_file(filename, list_):
-    """Combine cities write to file 'output.txt'."""
+    """Write text to file."""
 
-    try:
-        with open(filename, 'x') as file:
-            for word in list_:
-                file.write(word)
-                file.write('\n')
-    except FileExistsError:
-        with open(filename, 'a') as file:
-            for word in list_:
-                file.write(word)
-                file.write('\n')
+    with open(filename, 'w') as file:
+        for city in list_:
+            file.write(city)
+            file.write('\n')
 
 
 def combine(cities_list):
-    """List of cities combine."""
+    """Combine list of cities."""
 
     def find_world_for_dict(letter):
-        """Dictionary create.
-        Key - letter,
-        value - list of cities with first letter same key
-        """
+        """Create list of worlds started from letter."""
+
         result_by_letter = []
         for city in cities_list:
-            # print('letter = {}, city = {}'.format(letter, city))
             if letter == city[0].lower():
-                # print('letter = {}, city = {}'.format(letter, city))
                 result_by_letter.append(city)
         return result_by_letter
 
+    """Create dictionary:
+       key - letter,
+       value - list of cities with first letter same key
+    """
     dict_letters = {city[-1]: find_world_for_dict(city[-1]) for city in cities_list}
-    #print(dict_letters)
 
-    def recursion_func(letter, sets=[]):
+    def recursion_func(letter, sets):
+        """ Create list by city that combine cities so that the next one starts with the last letter of the previous"""
 
-        for key, value in dict_letters.items():
-            if letter == key:
-                if len(value) == 0:
-                    break
-                elif len(value) == 1:
-                    sets.append(value[0])
-                    #print('sets = {}'.format(sets))
-                recursion_func(sets[-1][-1], sets)
-        return sets
+        longer_word = ''
+        for city in dict_letters[letter]:
+            if city in sets:
+                continue
+            elif len(longer_word) < len(city):
+                longer_word = city
+        if longer_word == '':
+            return sets
+        else:
+            sets.append(longer_word)
+            return recursion_func(sets[-1][-1], sets)
 
-    result_by_cities = []
+    result_by_cities = []   # List of lists
 
     for city in cities_list:
-        result = [city]
-        result += recursion_func(city[-1], sets=[])
-        result_by_cities.append(result)
+        result_by_cities.append(recursion_func(city[-1], [city]))
         
-    print(result_by_cities)
-
     main_result = []
     for list_ in result_by_cities:
         if len(list_) > len(main_result):
             main_result = list_
 
-    print(main_result)
     return main_result
 
 
 def main():
-    cities = ["London", "Milan", "Stockholm", "Paris"]
+    #cities = ["London", "Milan", "Stockholm", "Paris"]
 
-    write_data_to_file('input.txt', cities)    # File 'input.txt' create
+    #write_data_to_file('input.txt', cities)    # Create file 'input.txt'
 
     data = read_text('input.txt')              # It's list of cities with file 'input.txt'
-    print(data)
 
     result = combine(data)
-    write_data_to_file('output.txt', result)     # Result write to file 'output.txt'
+    write_data_to_file('output.txt', result)    # Write result to file 'output.txt'
 
 
 if __name__ == '__main__':
